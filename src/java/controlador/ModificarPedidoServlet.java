@@ -8,16 +8,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import modelo.Pedido;
 import modelo.Cliente;
 import modelo.Producto;
+import static modelo.Conexion.getConnection;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import static modelo.Conexion.getConnection;
 
 @WebServlet("/ModificarPedido")
 public class ModificarPedidoServlet extends HttpServlet {
-     
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -43,22 +43,23 @@ public class ModificarPedidoServlet extends HttpServlet {
                     pedido.setCantidad(rs.getInt("cantidad"));
                     pedido.setEstado(rs.getString("estado"));
                     pedido.setTotal(rs.getDouble("total"));
+                    pedido.setFechaPedido(rs.getTimestamp("fecha_pedido"));
                 }
                 
-                // Obtener clientes
-                String sqlClientes = "SELECT * FROM clientes";
+                // Obtener clientes - NOMBRES CORRECTOS
+                String sqlClientes = "SELECT id, nombreCliente FROM clientes";
                 PreparedStatement psClientes = conn.prepareStatement(sqlClientes);
                 ResultSet rsClientes = psClientes.executeQuery();
                 
                 while (rsClientes.next()) {
                     Cliente cliente = new Cliente();
                     cliente.setId(rsClientes.getInt("id"));
-                    cliente.setNombreCliente(rsClientes.getString("nombre"));
+                    cliente.setNombreCliente(rsClientes.getString("nombreCliente"));
                     clientes.add(cliente);
                 }
                 
-                // Obtener productos
-                String sqlProductos = "SELECT * FROM productos";
+                // Obtener productos - NOMBRES CORRECTOS
+                String sqlProductos = "SELECT id, nombreProducto, precioProducto, stockProducto FROM productos";
                 PreparedStatement psProductos = conn.prepareStatement(sqlProductos);
                 ResultSet rsProductos = psProductos.executeQuery();
                 
@@ -70,6 +71,15 @@ public class ModificarPedidoServlet extends HttpServlet {
                     producto.setStockProducto(rsProductos.getInt("stockProducto"));
                     productos.add(producto);
                 }
+                
+                System.out.println("DEBUG - Pedido cargado: " + (pedido != null ? pedido.getId() : "null"));
+                System.out.println("DEBUG - Clientes: " + clientes.size());
+                System.out.println("DEBUG - Productos: " + productos.size());
+            }
+            
+            if (pedido == null) {
+                response.sendRedirect("Pedidos?error=no_encontrado");
+                return;
             }
             
             request.setAttribute("pedido", pedido);
@@ -77,9 +87,13 @@ public class ModificarPedidoServlet extends HttpServlet {
             request.setAttribute("productos", productos);
             request.getRequestDispatcher("modificarPedido.jsp").forward(request, response);
             
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
             response.sendRedirect("Pedidos?error=id_invalido");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("ERROR SQL: " + e.getMessage());
+            response.sendRedirect("Pedidos?error=sql");
         }
     }
     
@@ -94,8 +108,11 @@ public class ModificarPedidoServlet extends HttpServlet {
             int cantidad = Integer.parseInt(request.getParameter("cantidad"));
             String estado = request.getParameter("estado");
             
+            System.out.println("DEBUG - Modificando pedido ID: " + id);
+            System.out.println("DEBUG - Cliente: " + clienteId + ", Producto: " + productoId + ", Cantidad: " + cantidad);
+            
             try (Connection conn = getConnection()) {
-                // Obtener cantidad anterior del pedido
+                // Obtener datos del pedido anterior
                 String sqlOld = "SELECT producto_id, cantidad FROM pedidos WHERE id = ?";
                 PreparedStatement psOld = conn.prepareStatement(sqlOld);
                 psOld.setInt(1, id);
@@ -108,14 +125,19 @@ public class ModificarPedidoServlet extends HttpServlet {
                     oldCantidad = rsOld.getInt("cantidad");
                 }
                 
-                // Devolver stock anterior
-                String sqlReturnStock = "UPDATE productos SET stockProducto = stockProducto + ? WHERE id = ?";
-                PreparedStatement psReturn = conn.prepareStatement(sqlReturnStock);
-                psReturn.setInt(1, oldCantidad);
-                psReturn.setInt(2, oldProductoId);
-                psReturn.executeUpdate();
+                System.out.println("DEBUG - Producto anterior: " + oldProductoId + ", Cantidad anterior: " + oldCantidad);
                 
-                // Obtener nuevo precio y verificar stock
+                // Devolver stock del producto anterior
+                if (oldProductoId > 0) {
+                    String sqlReturnStock = "UPDATE productos SET stockProducto = stockProducto + ? WHERE id = ?";
+                    PreparedStatement psReturn = conn.prepareStatement(sqlReturnStock);
+                    psReturn.setInt(1, oldCantidad);
+                    psReturn.setInt(2, oldProductoId);
+                    psReturn.executeUpdate();
+                    System.out.println("DEBUG - Stock devuelto: " + oldCantidad + " unidades al producto " + oldProductoId);
+                }
+                
+                // Obtener precio del nuevo producto y verificar stock
                 String sqlPrecio = "SELECT precioProducto, stockProducto FROM productos WHERE id = ?";
                 PreparedStatement psPrecio = conn.prepareStatement(sqlPrecio);
                 psPrecio.setInt(1, productoId);
@@ -125,7 +147,10 @@ public class ModificarPedidoServlet extends HttpServlet {
                     double precio = rs.getDouble("precioProducto");
                     int stock = rs.getInt("stockProducto");
                     
+                    System.out.println("DEBUG - Nuevo producto - Precio: " + precio + ", Stock disponible: " + stock);
+                    
                     if (stock < cantidad) {
+                        System.out.println("ERROR - Stock insuficiente");
                         response.sendRedirect("Pedidos?error=sin_stock");
                         return;
                     }
@@ -141,7 +166,9 @@ public class ModificarPedidoServlet extends HttpServlet {
                     psUpdate.setString(4, estado);
                     psUpdate.setDouble(5, total);
                     psUpdate.setInt(6, id);
-                    psUpdate.executeUpdate();
+                    int rowsUpdated = psUpdate.executeUpdate();
+                    
+                    System.out.println("DEBUG - Filas actualizadas: " + rowsUpdated);
                     
                     // Descontar nuevo stock
                     String sqlUpdateStock = "UPDATE productos SET stockProducto = stockProducto - ? WHERE id = ?";
@@ -150,13 +177,21 @@ public class ModificarPedidoServlet extends HttpServlet {
                     psStock.setInt(2, productoId);
                     psStock.executeUpdate();
                     
+                    System.out.println("DEBUG - Stock descontado: " + cantidad + " unidades del producto " + productoId);
+                    
                     response.sendRedirect("Pedidos?mensaje=modificado");
                 } else {
+                    System.out.println("ERROR - Producto no encontrado");
                     response.sendRedirect("Pedidos?error=producto_no_encontrado");
                 }
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
+            System.out.println("ERROR - Formato de número inválido: " + e.getMessage());
+            response.sendRedirect("Pedidos?error=datos_invalidos");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("ERROR SQL: " + e.getMessage());
             response.sendRedirect("Pedidos?error=sql");
         }
     }

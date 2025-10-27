@@ -31,7 +31,7 @@
         <div class="card">
             <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
                 <div>
-                    <a href="index.jsp" class="btn btn-light me-2">
+                    <a href="index.html" class="btn btn-light me-2">
                         <i class="bi bi-house"></i> Inicio
                     </a>
                     <h2 class="mb-0 d-inline">Lista de Pedidos</h2>
@@ -164,7 +164,7 @@
                                     if (clientes != null) {
                                         for (Cliente cliente : clientes) {
                                 %>
-                                <option value="<%= cliente.getId() %>"><%= cliente.getNombre() %></option>
+                                <option value="<%= cliente.getId() %>"><%= cliente.getNombreCliente() %></option>
                                 <%
                                         }
                                     }
