@@ -5,19 +5,17 @@
         <group>
             <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/guardar.jsp</file>
             <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/index.html</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/listarPedidos.jsp</file>
             <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/editarCliente.jsp</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/nuevo.jsp</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/EliminarClienteServlet.java</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/listarProductos.jsp</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/GuardarClienteServlet.java</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/EliminarPedidoServlet.java</file>
             <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/editarProducto.jsp</file>
             <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/modelo/Conexion.java</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/ModificarProductoServlet.java</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/ClienteServlet.java</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/ModificarPedidoServlet.java</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/modificarPedido.jsp</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/modelo/Pedido.java</file>
             <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/EliminarProductoServlet.java</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/nuevoProducto.jsp</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/modelo/Cliente.java</file>
-            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/listar.jsp</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/will/Downloads/sistemasDistribuidosPC2/sistemasDistribuidosPC2/src/java/controlador/PedidosServlet.java</file>
         </group>
     </open-files>
 </project-private>
