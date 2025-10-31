@@ -1,8 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="modelo.Pedido" %>
-<%@ page import="modelo.Cliente" %>
-<%@ page import="modelo.Producto" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,9 +34,9 @@
                     </a>
                     <h2 class="mb-0 d-inline">Lista de Pedidos</h2>
                 </div>
-                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#nuevoPedidoModal">
+                <a href="Pedidos?action=nuevo" class="btn btn-light">
                     <i class="bi bi-plus-circle"></i> Nuevo Pedido
-                </button>
+                </a>
             </div>
             <div class="card-body">
                 <%
@@ -70,6 +68,8 @@
                             textoError = "Stock insuficiente para este pedido";
                         } else if (error.equals("no_encontrado")) {
                             textoError = "Pedido no encontrado";
+                        } else if (error.equals("sin_productos")) {
+                            textoError = "Debe agregar al menos un producto";
                         }
                 %>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -86,8 +86,6 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Cliente</th>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
                                 <th>Total</th>
                                 <th>Fecha</th>
                                 <th>Estado</th>
@@ -106,17 +104,21 @@
                             %>
                             <tr>
                                 <td><%= pedido.getId() %></td>
-                                <td><%= pedido.getNombreCliente() %></td>
-                                <td><%= pedido.getNombreProducto() %></td>
-                                <td><%= pedido.getCantidad() %></td>
+                                <td><%= pedido.getNombreCliente() != null ? pedido.getNombreCliente() : "N/A" %></td>
                                 <td>$<%= String.format("%.2f", pedido.getTotal()) %></td>
                                 <td><%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(pedido.getFechaPedido()) %></td>
                                 <td><span class="badge <%= badgeClass %>"><%= pedido.getEstado() %></span></td>
                                 <td class="text-center">
+                                    
+                                    <a href="VerDetallePedido?id=<%= pedido.getId() %>" 
+                                       class="btn btn-sm btn-info" 
+                                       title="Ver Detalle">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
                                     <a href="ModificarPedido?id=<%= pedido.getId() %>" 
-                                       class="btn btn-sm btn-warning" 
-                                       title="Editar">
-                                        <i class="bi bi-pencil-square"></i> Editar
+                                        class="btn btn-sm btn-warning" 
+                                        title="Cambiar Estado">
+                                         <i class="bi bi-pencil-square"></i> Estado
                                     </a>
                                     <a href="EliminarPedido?id=<%= pedido.getId() %>" 
                                        class="btn btn-sm btn-danger" 
@@ -131,7 +133,7 @@
                                 } else {
                             %>
                             <tr>
-                                <td colspan="8" class="text-center text-muted">
+                                <td colspan="6" class="text-center text-muted">
                                     No hay pedidos registrados
                                 </td>
                             </tr>
@@ -145,99 +147,6 @@
         </div>
     </div>
     
-    <!-- Modal Nuevo Pedido -->
-    <div class="modal fade" id="nuevoPedidoModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Nuevo Pedido</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form action="Pedidos" method="post">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="clienteId" class="form-label">Cliente</label>
-                            <select class="form-select" id="clienteId" name="clienteId" required>
-                                <option value="">Seleccione un cliente</option>
-                                <%
-                                    List<Cliente> clientes = (List<Cliente>) request.getAttribute("clientes");
-                                    if (clientes != null) {
-                                        for (Cliente cliente : clientes) {
-                                %>
-                                <option value="<%= cliente.getId() %>"><%= cliente.getNombreCliente() %></option>
-                                <%
-                                        }
-                                    }
-                                %>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="productoId" class="form-label">Producto</label>
-                            <select class="form-select" id="productoId" name="productoId" required onchange="updatePrice()">
-                                <option value="">Seleccione un producto</option>
-                                <%
-                                    List<Producto> productos = (List<Producto>) request.getAttribute("productos");
-                                    if (productos != null) {
-                                        for (Producto producto : productos) {
-                                %>
-                                <option value="<%= producto.getId() %>" 
-                                        data-precio="<%= producto.getPrecioProducto() %>"
-                                        data-stock="<%= producto.getStockProducto() %>">
-                                    <%= producto.getNombreProducto() %> - Stock: <%= producto.getStockProducto() %>
-                                </option>
-                                <%
-                                        }
-                                    }
-                                %>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cantidad" class="form-label">Cantidad</label>
-                            <input type="number" class="form-control" id="cantidad" name="cantidad" 
-                                   min="1" required onchange="updateTotal()">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Total Estimado</label>
-                            <input type="text" class="form-control" id="totalEstimado" readonly>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Crear Pedido</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function updatePrice() {
-            updateTotal();
-        }
-        
-        function updateTotal() {
-            const select = document.getElementById('productoId');
-            const cantidad = document.getElementById('cantidad').value;
-            const totalField = document.getElementById('totalEstimado');
-            
-            if (select.selectedIndex > 0 && cantidad > 0) {
-                const option = select.options[select.selectedIndex];
-                const precio = parseFloat(option.getAttribute('data-precio'));
-                const stock = parseInt(option.getAttribute('data-stock'));
-                
-                if (parseInt(cantidad) > stock) {
-                    alert('La cantidad supera el stock disponible (' + stock + ')');
-                    document.getElementById('cantidad').value = stock;
-                    return;
-                }
-                
-                const total = precio * cantidad;
-                totalField.value = '$' + total.toFixed(2);
-            } else {
-                totalField.value = '';
-            }
-        }
-    </script>
 </body>
 </html>
