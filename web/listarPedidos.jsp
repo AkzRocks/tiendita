@@ -86,6 +86,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Cliente</th>
+                                <th>DNI/RUC</th>
                                 <th>Total</th>
                                 <th>Fecha</th>
                                 <th>Estado</th>
@@ -105,6 +106,7 @@
                             <tr>
                                 <td><%= pedido.getId() %></td>
                                 <td><%= pedido.getNombreCliente() != null ? pedido.getNombreCliente() : "N/A" %></td>
+                                <td><%= pedido.getDniRuc() != null ? pedido.getDniRuc() : "-" %></td>
                                 <td>$<%= String.format("%.2f", pedido.getTotal()) %></td>
                                 <td><%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(pedido.getFechaPedido()) %></td>
                                 <td><span class="badge <%= badgeClass %>"><%= pedido.getEstado() %></span></td>
@@ -114,6 +116,11 @@
                                        class="btn btn-sm btn-info" 
                                        title="Ver Detalle">
                                         <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                    <a href="EditarPedido?id=<%= pedido.getId() %>" 
+                                        class="btn btn-sm btn-primary" 
+                                        title="Editar Pedido">
+                                         <i class="bi bi-pencil"></i> Editar
                                     </a>
                                     <a href="ModificarPedido?id=<%= pedido.getId() %>" 
                                         class="btn btn-sm btn-warning" 

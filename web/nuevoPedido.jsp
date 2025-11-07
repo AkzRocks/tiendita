@@ -79,7 +79,12 @@
                                         if (clientes != null) {
                                             for (Cliente cliente : clientes) {
                                     %>
-                                    <option value="<%= cliente.getId() %>"><%= cliente.getId() %> - <%= cliente.getNombreCliente()%></option>
+                                    <option value="<%= cliente.getId() %>"
+                                            data-nombre="<%= cliente.getNombreCliente() != null ? cliente.getNombreCliente() : "" %>"
+                                            data-dni="<%= cliente.getDniRuc() != null ? cliente.getDniRuc() : "" %>"
+                                            data-direccion="<%= cliente.getDireccion() != null ? cliente.getDireccion() : "" %>">
+                                        <%= cliente.getId() %> - <%= cliente.getNombreCliente()%>
+                                    </option>
                                     <%
                                             }
                                         }
@@ -97,12 +102,16 @@
                                 <input type="text" class="form-control" id="nombreCliente" readonly>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fw-bold">Nro.Pedido: <span class="text-success">Automático</span></label>
-                                <input type="text" class="form-control" value="Se genera automáticamente" readonly>
+                                <label class="form-label fw-bold">DNI/RUC:</label>
+                                <input type="text" class="form-control" id="dniCliente" readonly>
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Nro.Pedido: <span class="text-success">Automático</span></label>
+                                <input type="text" class="form-control" value="Se genera automáticamente" readonly>
+                            </div>
+                            <div class="col-md-6">
                                 <label class="form-label fw-bold">Dirección:</label>
                                 <input type="text" class="form-control" id="direccionCliente" readonly>
                             </div>
@@ -225,11 +234,12 @@
             const selectedOption = select.options[select.selectedIndex];
             
             if (select.value) {
-                // Aquí podrías hacer una llamada AJAX para obtener más datos del cliente
-                document.getElementById('nombreCliente').value = selectedOption.text.split(' - ')[1] || '';
-                document.getElementById('direccionCliente').value = 'Cargar desde BD'; // Implementar si tienes dirección
+                document.getElementById('nombreCliente').value = selectedOption.getAttribute('data-nombre') || '';
+                document.getElementById('dniCliente').value = selectedOption.getAttribute('data-dni') || '';
+                document.getElementById('direccionCliente').value = selectedOption.getAttribute('data-direccion') || '';
             } else {
                 document.getElementById('nombreCliente').value = '';
+                document.getElementById('dniCliente').value = '';
                 document.getElementById('direccionCliente').value = '';
             }
         });

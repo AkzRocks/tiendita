@@ -62,6 +62,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Cliente:</strong> <%= pedido.getNombreCliente() %></p>
+                            <p><strong>DNI/RUC:</strong> <%= pedido.getDniRuc() != null ? pedido.getDniRuc() : "-" %></p>
+                            <p><strong>Dirección:</strong> <%= pedido.getDireccion() != null ? pedido.getDireccion() : "-" %></p>
                             <p><strong>Fecha:</strong> <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(pedido.getFechaPedido()) %></p>
                         </div>
                         <div class="col-md-6">

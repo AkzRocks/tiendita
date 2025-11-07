@@ -6,6 +6,8 @@ public class Cliente {
     private String nombreCliente;
     private String emailCliente;
     private int telefonoCliente;
+    private String dniRuc;
+    private String direccion;
 
     public int getId() {
         return id;
@@ -37,5 +39,21 @@ public class Cliente {
 
     public void setTelefonoCliente(int telefonoCliente) {
         this.telefonoCliente = telefonoCliente;
+    }
+
+    public String getDniRuc() {
+        return dniRuc;
+    }
+
+    public void setDniRuc(String dniRuc) {
+        this.dniRuc = dniRuc;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

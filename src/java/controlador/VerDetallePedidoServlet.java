@@ -31,7 +31,7 @@ public class VerDetallePedidoServlet extends HttpServlet {
             try (Connection conn = getConnection()) {
                 
                 // Obtener información del pedido
-                String sqlPedido = "SELECT p.*, c.nombreCliente, c.emailCliente, c.telefonoCliente " +
+                String sqlPedido = "SELECT p.*, c.nombreCliente, c.emailCliente, c.telefonoCliente, c.dniRuc, c.direccion " +
                                   "FROM pedidos p " +
                                   "JOIN clientes c ON p.cliente_id = c.id " +
                                   "WHERE p.id = ?";
@@ -47,6 +47,8 @@ public class VerDetallePedidoServlet extends HttpServlet {
                     pedido.setEstado(rsPedido.getString("estado"));
                     pedido.setTotal(rsPedido.getDouble("total"));
                     pedido.setNombreCliente(rsPedido.getString("nombreCliente"));
+                    try { pedido.setDniRuc(rsPedido.getString("dniRuc")); } catch (Exception ignored) {}
+                    try { pedido.setDireccion(rsPedido.getString("direccion")); } catch (Exception ignored) {}
                 }
                 
                 // Obtener detalles del pedido

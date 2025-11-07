@@ -44,7 +44,7 @@ public class PedidosServlet extends HttpServlet {
             
             // Obtener pedidos con información relacionada
             String sqlPedidos = "SELECT p.id, p.cliente_id, p.fecha_pedido, p.estado, p.total, " +
-                               "c.nombreCliente as nombre_cliente " +
+                               "c.nombreCliente as nombre_cliente, c.dniRuc, c.direccion " +
                                "FROM pedidos p " +
                                "LEFT JOIN clientes c ON p.cliente_id = c.id " +
                                "ORDER BY p.fecha_pedido DESC";
@@ -60,13 +60,15 @@ public class PedidosServlet extends HttpServlet {
                 pedido.setEstado(rsPedidos.getString("estado"));
                 pedido.setTotal(rsPedidos.getDouble("total"));
                 pedido.setNombreCliente(rsPedidos.getString("nombre_cliente"));
+                try { pedido.setDniRuc(rsPedidos.getString("dniRuc")); } catch (Exception ignored) {}
+                try { pedido.setDireccion(rsPedidos.getString("direccion")); } catch (Exception ignored) {}
                 pedidos.add(pedido);
             }
             
             System.out.println("DEBUG - Pedidos cargados: " + pedidos.size());
             
             // Obtener clientes para el formulario
-            String sqlClientes = "SELECT id, nombreCliente FROM clientes";
+            String sqlClientes = "SELECT id, nombreCliente, dniRuc, direccion FROM clientes";
             PreparedStatement psClientes = conn.prepareStatement(sqlClientes);
             ResultSet rsClientes = psClientes.executeQuery();
             
@@ -74,6 +76,8 @@ public class PedidosServlet extends HttpServlet {
                 Cliente cliente = new Cliente();
                 cliente.setId(rsClientes.getInt("id"));
                 cliente.setNombreCliente(rsClientes.getString("nombreCliente"));
+                try { cliente.setDniRuc(rsClientes.getString("dniRuc")); } catch (Exception ignored) {}
+                try { cliente.setDireccion(rsClientes.getString("direccion")); } catch (Exception ignored) {}
                 clientes.add(cliente);
             }
             
@@ -126,7 +130,7 @@ public class PedidosServlet extends HttpServlet {
         
         try (Connection conn = getConnection()) {
             // Obtener clientes
-            String sqlClientes = "SELECT id, nombreCliente FROM clientes";
+            String sqlClientes = "SELECT id, nombreCliente, dniRuc, direccion FROM clientes";
             PreparedStatement psClientes = conn.prepareStatement(sqlClientes);
             ResultSet rsClientes = psClientes.executeQuery();
             
@@ -134,6 +138,8 @@ public class PedidosServlet extends HttpServlet {
                 Cliente cliente = new Cliente();
                 cliente.setId(rsClientes.getInt("id"));
                 cliente.setNombreCliente(rsClientes.getString("nombreCliente"));
+                try { cliente.setDniRuc(rsClientes.getString("dniRuc")); } catch (Exception ignored) {}
+                try { cliente.setDireccion(rsClientes.getString("direccion")); } catch (Exception ignored) {}
                 clientes.add(cliente);
             }
             

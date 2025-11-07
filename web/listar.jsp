@@ -19,7 +19,7 @@
                     <i class="bi bi-plus-circle"></i> Nuevo Cliente
                 </a>
             </div>
-            <a href="index.html" class="btn-home">Inicio</a>
+            <a href="dashboard.jsp" class="btn-home">Inicio</a>
 
 <style>
 .btn-home {
@@ -85,6 +85,8 @@
                                 <th>Nombre</th>
                                 <th>Email</th>
                                 <th>Teléfono</th>
+                                <th>DNI/RUC</th>
+                                <th>Dirección</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -99,6 +101,8 @@
                                 <td><%= cliente.getNombreCliente() %></td>
                                 <td><%= cliente.getEmailCliente() %></td>
                                 <td><%= cliente.getTelefonoCliente() %></td>
+                                <td><%= cliente.getDniRuc() %></td>
+                                <td><%= cliente.getDireccion() %></td>
                                 <td class="text-center">
                                     <a href="ModificarCliente?id=<%= cliente.getId() %>" 
                                        class="btn btn-sm btn-warning" 
@@ -118,7 +122,7 @@
                                 } else {
                             %>
                             <tr>
-                                <td colspan="5" class="text-center text-muted">
+                                <td colspan="7" class="text-center text-muted">
                                     No hay clientes registrados
                                 </td>
                             </tr>

@@ -19,17 +19,21 @@ public class GuardarClienteServlet extends HttpServlet {
         String nombreCliente = request.getParameter("nombreCliente");
         String emailCliente = request.getParameter("emailCliente");
         String telefonoCliente = request.getParameter("telefonoCliente");
+        String dniRuc = request.getParameter("dniRuc");
+        String direccion = request.getParameter("direccion");
         
         Connection conn = null;
         PreparedStatement pstmt = null;
         
         try {
             conn = Conexion.getConnection();
-            String sql = "INSERT INTO clientes (nombreCliente, emailCliente, telefonoCliente) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO clientes (nombreCliente, emailCliente, telefonoCliente, dniRuc, direccion) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, nombreCliente);
             pstmt.setString(2, emailCliente);
             pstmt.setInt(3, Integer.parseInt(telefonoCliente));
+            pstmt.setString(4, dniRuc);
+            pstmt.setString(5, direccion);
             pstmt.executeUpdate();
             
             response.sendRedirect("Clientes");

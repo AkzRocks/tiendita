@@ -18,7 +18,7 @@
                 <a href="nuevoProducto.jsp" class="btn btn-light">
                     <i class="bi bi-plus-circle"></i> Nuevo Producto
                 </a>
-                <a href="index.html" class="btn-home">inicio</a>
+                <a href="dashboard.jsp" class="btn-home">inicio</a>
 
 <style>
 .btn-home {

@@ -100,6 +100,16 @@
                 <label>Teléfono:</label>
                 <input type="text" name="telefonoCliente" value="<%= cliente.getTelefonoCliente() %>" required>
             </div>
+
+            <div class="form-group">
+                <label>DNI/RUC:</label>
+                <input type="text" name="dniRuc" value="<%= cliente.getDniRuc() %>" required>
+            </div>
+
+            <div class="form-group">
+                <label>Dirección:</label>
+                <input type="text" name="direccion" value="<%= cliente.getDireccion() %>" required>
+            </div>
             
             <div class="btn-group">
                 <button type="submit" class="btn-guardar">Guardar Cambios</button>

@@ -34,6 +34,8 @@ public class ClienteServlet extends HttpServlet {
                 cliente.setNombreCliente(rs.getString("nombreCliente"));
                 cliente.setEmailCliente(rs.getString("emailCliente"));
                 cliente.setTelefonoCliente(rs.getInt("telefonoCliente"));
+                try { cliente.setDniRuc(rs.getString("dniRuc")); } catch (Exception ignored) {}
+                try { cliente.setDireccion(rs.getString("direccion")); } catch (Exception ignored) {}
                 clientes.add(cliente);
             }
             

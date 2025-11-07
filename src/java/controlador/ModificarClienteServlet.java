@@ -48,6 +48,8 @@ public class ModificarClienteServlet extends HttpServlet {
                 cliente.setNombreCliente(rs.getString("nombreCliente"));
                 cliente.setEmailCliente(rs.getString("emailCliente"));
                 cliente.setTelefonoCliente(rs.getInt("telefonoCliente"));
+                try { cliente.setDniRuc(rs.getString("dniRuc")); } catch (Exception ignored) {}
+                try { cliente.setDireccion(rs.getString("direccion")); } catch (Exception ignored) {}
                 
                 request.setAttribute("cliente", cliente);
                 request.getRequestDispatcher("editarCliente.jsp").forward(request, response);
@@ -77,18 +79,22 @@ public class ModificarClienteServlet extends HttpServlet {
         String nombreCliente = request.getParameter("nombreCliente");
         String emailCliente = request.getParameter("emailCliente");
         String telefonoCliente = request.getParameter("telefonoCliente");
+        String dniRuc = request.getParameter("dniRuc");
+        String direccion = request.getParameter("direccion");
         
         Connection conn = null;
         PreparedStatement pstmt = null;
         
         try {
             conn = Conexion.getConnection();
-            String sql = "UPDATE clientes SET nombreCliente = ?, emailCliente = ?, telefonoCliente = ? WHERE id = ?";
+            String sql = "UPDATE clientes SET nombreCliente = ?, emailCliente = ?, telefonoCliente = ?, dniRuc = ?, direccion = ? WHERE id = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, nombreCliente);
             pstmt.setString(2, emailCliente);
-            pstmt.setString(3, telefonoCliente);
-            pstmt.setInt(4, Integer.parseInt(idCliente));
+            pstmt.setInt(3, Integer.parseInt(telefonoCliente));
+            pstmt.setString(4, dniRuc);
+            pstmt.setString(5, direccion);
+            pstmt.setInt(6, Integer.parseInt(idCliente));
             
             int filasAfectadas = pstmt.executeUpdate();
             

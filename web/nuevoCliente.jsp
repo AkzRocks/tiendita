@@ -207,6 +207,14 @@
                     <td><input type="number" name="telefonoCliente" placeholder="987654321" required></td>
                 </tr>
                 <tr>
+                    <td>DNI/RUC:</td>
+                    <td><input type="text" name="dniRuc" placeholder="DNI o RUC" required></td>
+                </tr>
+                <tr>
+                    <td>Dirección:</td>
+                    <td><input type="text" name="direccion" placeholder="Dirección completa" required></td>
+                </tr>
+                <tr>
                     <td colspan="2" class="button-row">
                         <input type="submit" value="Guardar">
                         <br>

@@ -11,6 +11,8 @@ public class Pedido {
     
     // Campos adicionales para mostrar
     private String nombreCliente;
+    private String dniRuc;
+    private String direccion;
     
     public Pedido() {}
     
@@ -31,4 +33,10 @@ public class Pedido {
     
     public String getNombreCliente() { return nombreCliente; }
     public void setNombreCliente(String nombreCliente) { this.nombreCliente = nombreCliente; }
+
+    public String getDniRuc() { return dniRuc; }
+    public void setDniRuc(String dniRuc) { this.dniRuc = dniRuc; }
+
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
 }
